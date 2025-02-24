@@ -1,7 +1,8 @@
 # Discord Personal Music Bot with YouTube Playlists
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/node/v/18)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/Node.js-18.x-brightgreen?logo=node.js)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-4.x-blue?logo=typescript)](https://www.typescriptlang.org/)
 
 ## Overview
 
@@ -71,7 +72,7 @@ Before you begin, ensure you have the following installed and configured:
 
     ```bash
     git clone https://github.com/SniksaX/Discord-Music-Bot
-    cd your-repo-name
+    cd Discord-Music-Bot
     ```
 
 2.  **Install dependencies:**
