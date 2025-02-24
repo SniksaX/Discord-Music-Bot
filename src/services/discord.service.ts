@@ -107,23 +107,23 @@ export class DiscordService {
         }
     
         if (userData.refreshToken) {
-            console.log(`RefreshToken found, attempting to refresh token proactively for user: ${discordUserId}`); // ADDED LOG - Proactive refresh
+            console.log(`RefreshToken found, attempting to refresh token proactively for user: ${discordUserId}`); 
     
             try {
                 const newTokens = await this.refreshUserToken(discordUserId);
                 userData.accessToken = newTokens.accessToken;
                 this.googleUserMap.set(discordUserId, userData);
-                console.log(`Proactive token refresh successful for user: ${discordUserId}. New accessToken (truncated): ${userData.accessToken.substring(0, 20)}...`); // Modified log
+                console.log(`Proactive token refresh successful for user: ${discordUserId}. New accessToken (truncated): ${userData.accessToken.substring(0, 20)}...`); 
     
             } catch (refreshError) {
                 console.error("Proactive token refresh failed:", refreshError);
                 this.googleUserMap.delete(discordUserId);
-                console.log(`Proactive token refresh failed and user removed from googleUserMap for user: ${discordUserId}`); // Modified log
+                console.log(`Proactive token refresh failed and user removed from googleUserMap for user: ${discordUserId}`); 
                 return false;
             }
             return true;
         } else if (userData.accessToken) {
-            console.log(`AccessToken found but no refreshToken. Assuming accessToken might be valid for user: ${discordUserId} (truncated): ${userData.accessToken.substring(0, 20)}...`); // Modified log
+            console.log(`AccessToken found but no refreshToken. Assuming accessToken might be valid for user: ${discordUserId} (truncated): ${userData.accessToken.substring(0, 20)}...`); 
             return true;
         } else {
             console.log(`No accessToken or refreshToken found for user: ${discordUserId}`);
@@ -132,10 +132,10 @@ export class DiscordService {
     }
     
     private static async refreshUserToken(discordUserId: string): Promise<{ accessToken: string; refreshToken?: string }> {
-        console.log(`refreshUserToken START for Discord user ID: ${discordUserId}`); // ADDED LOG
+        console.log(`refreshUserToken START for Discord user ID: ${discordUserId}`); 
     
         const profile = await ProfileModel.findByDiscordId(discordUserId);
-        console.log("Found profile from DB:", profile); // ADDED LOG
+        console.log("Found profile from DB:", profile); 
     
         if (!profile || !profile.refresh_token) {
             console.error(`No refresh token available for Discord user ID: ${discordUserId}`);
@@ -146,7 +146,7 @@ export class DiscordService {
             const tokenResponse = await oauth2Client.getToken(profile.refresh_token);
             const tokens = tokenResponse.tokens;
     
-            console.log("Token refresh response from Google:", tokens); // ADDED LOG
+            console.log("Token refresh response from Google:", tokens); 
     
             if (!tokens.access_token) {
                 console.error("Failed to refresh token: Access token not present in response.");
@@ -157,18 +157,18 @@ export class DiscordService {
             const userData = this.googleUserMap.get(discordUserId);
             if (userData) {
                 this.googleUserMap.set(discordUserId, { accessToken: tokens.access_token, refreshToken: tokens.refresh_token || userData.refreshToken });
-                console.log(`Token refreshed and googleUserMap updated for Discord user ID: ${discordUserId}. New accessToken (truncated): ${tokens.access_token.substring(0, 20)}...`); // ADDED LOG
+                console.log(`Token refreshed and googleUserMap updated for Discord user ID: ${discordUserId}. New accessToken (truncated): ${tokens.access_token.substring(0, 20)}...`); 
             } else {
                 console.warn(`User data not found in googleUserMap after refresh for Discord user ID: ${discordUserId}`);
             }
     
-            console.log(`refreshUserToken END (success) for Discord user ID: ${discordUserId}`); // ADDED LOG
+            console.log(`refreshUserToken END (success) for Discord user ID: ${discordUserId}`); 
             return { accessToken: tokens.access_token, refreshToken: tokens.refresh_token || undefined };
     
         } catch (error: any) {
             console.error(`Error refreshing token for Discord user ID: ${discordUserId}`, error);
             this.googleUserMap.delete(discordUserId);
-            console.log(`refreshUserToken END (failure) and user removed from googleUserMap for Discord user ID: ${discordUserId}`); // ADDED LOG
+            console.log(`refreshUserToken END (failure) and user removed from googleUserMap for Discord user ID: ${discordUserId}`); 
             throw new Error(`Failed to refresh token: ${error.message}`);
         }
     }
